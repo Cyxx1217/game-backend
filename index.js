@@ -45,14 +45,16 @@ app.post('/login', (req, res) => {
 
 // 取得排行榜
 app.get('/leaderboard', (req, res) => {
+  console.log('收到 /leaderboard 請求');
   db.all('SELECT username, score FROM Leaderboard ORDER BY score DESC LIMIT 10', [], (err, rows) => {
     if (err) {
+      console.error('查詢排行榜失敗:', err.message);
       return res.status(500).json({ error: '無法取得排行榜' });
     }
+    console.log('排行榜資料:', rows);
     res.json(rows);
   });
 });
-
 // 上傳分數
 app.post('/score', (req, res) => {
   const { username, score } = req.body;
@@ -66,6 +68,9 @@ app.post('/score', (req, res) => {
       res.json({ message: '分數上傳成功' });
     }
   );
+});
+app.get('/', (req, res) => {
+  res.json({ message: '後端運行正常' });
 });
 
 const PORT = process.env.PORT || 3000;
